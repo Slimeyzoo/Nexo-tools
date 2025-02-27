@@ -17,10 +17,70 @@
     <label>File Name: <input type="text" id="file_name"></label><br>
     <label>Item Name: <input type="text" id="itemname"></label><br>
     <label>Material: 
-      <select id="material">
-        <option value="PAPER">PAPER</option>
-        <option value="STONE_SWORD">STONE_SWORD</option>
-      </select>
+      <input type="text" id="itemSearch" placeholder="Search for an item..." onkeyup="filterItems()">
+
+<select id="material">
+    <option value="PAPER">PAPER</option>
+
+    <!-- SWORDS -->
+    <option value="WOODEN_SWORD">WOODEN_SWORD</option>
+    <option value="STONE_SWORD">STONE_SWORD</option>
+    <option value="IRON_SWORD">IRON_SWORD</option>
+    <option value="GOLDEN_SWORD">GOLDEN_SWORD</option>
+    <option value="DIAMOND_SWORD">DIAMOND_SWORD</option>
+    <option value="NETHERITE_SWORD">NETHERITE_SWORD</option>
+
+    <!-- LEATHER ARMOR -->
+    <option value="LEATHER_HELMET">LEATHER_HELMET</option>
+    <option value="LEATHER_CHESTPLATE">LEATHER_CHESTPLATE</option>
+    <option value="LEATHER_LEGGINGS">LEATHER_LEGGINGS</option>
+    <option value="LEATHER_BOOTS">LEATHER_BOOTS</option>
+
+    <!-- CHAINMAIL ARMOR -->
+    <option value="CHAINMAIL_HELMET">CHAINMAIL_HELMET</option>
+    <option value="CHAINMAIL_CHESTPLATE">CHAINMAIL_CHESTPLATE</option>
+    <option value="CHAINMAIL_LEGGINGS">CHAINMAIL_LEGGINGS</option>
+    <option value="CHAINMAIL_BOOTS">CHAINMAIL_BOOTS</option>
+
+    <!-- IRON ARMOR -->
+    <option value="IRON_HELMET">IRON_HELMET</option>
+    <option value="IRON_CHESTPLATE">IRON_CHESTPLATE</option>
+    <option value="IRON_LEGGINGS">IRON_LEGGINGS</option>
+    <option value="IRON_BOOTS">IRON_BOOTS</option>
+
+    <!-- GOLDEN ARMOR -->
+    <option value="GOLDEN_HELMET">GOLDEN_HELMET</option>
+    <option value="GOLDEN_CHESTPLATE">GOLDEN_CHESTPLATE</option>
+    <option value="GOLDEN_LEGGINGS">GOLDEN_LEGGINGS</option>
+    <option value="GOLDEN_BOOTS">GOLDEN_BOOTS</option>
+
+    <!-- DIAMOND ARMOR -->
+    <option value="DIAMOND_HELMET">DIAMOND_HELMET</option>
+    <option value="DIAMOND_CHESTPLATE">DIAMOND_CHESTPLATE</option>
+    <option value="DIAMOND_LEGGINGS">DIAMOND_LEGGINGS</option>
+    <option value="DIAMOND_BOOTS">DIAMOND_BOOTS</option>
+
+    <!-- NETHERITE ARMOR -->
+    <option value="NETHERITE_HELMET">NETHERITE_HELMET</option>
+    <option value="NETHERITE_CHESTPLATE">NETHERITE_CHESTPLATE</option>
+    <option value="NETHERITE_LEGGINGS">NETHERITE_LEGGINGS</option>
+    <option value="NETHERITE_BOOTS">NETHERITE_BOOTS</option>
+</select>
+
+<script>
+function filterItems() {
+    const input = document.getElementById('itemSearch').value.toUpperCase();
+    const select = document.getElementById('material');
+    const options = select.getElementsByTagName('option');
+
+    for (let i = 0; i < options.length; i++) {
+        const txtValue = options[i].textContent || options[i].innerText;
+        options[i].style.display = txtValue.toUpperCase().includes(input) ? '' : 'none';
+    }
+}
+</script>
+
+    
     </label><br>
     <label>Namespace: <input type="text" id="namespace"></label><br>
     <label>Model: <input type="text" id="model"></label><br>
