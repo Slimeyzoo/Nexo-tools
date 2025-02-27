@@ -5,6 +5,8 @@
   <style>
     textarea { width: 100%; height: 200px; }
     button { font-size: 10px; padding: 5px 10px; cursor: pointer; }
+    #components { display: none; margin-top: 10px; }
+    .toggle-button { font-size: 12px; margin-top: 10px; }
   </style>
   <button onclick="location.href='index.html'">Go to Home</button>
 </head>
@@ -22,15 +24,26 @@
     <label>Namespace: <input type="text" id="namespace"></label><br>
     <label>Model: <input type="text" id="model"></label><br>
     <label>Custom Model Data: <input type="text" id="custom_model_data"></label><br>
-    <label>Slot: 
-      <select id="slot">
-        <option value="HEAD">HEAD</option>
-        <option value="CHEST">CHEST</option>
-        <option value="LEGS">LEGS</option>
-        <option value="FEET">FEET</option>
-        <option value="HAND">HAND</option>
-      </select>
-    </label><br>
+    
+    <!-- Removed the general Slot input here -->
+    
+    <!-- Toggle button for Components -->
+    <button type="button" class="toggle-button" onclick="toggleComponents()">Toggle Components</button>
+    
+    <!-- Components Section (initially hidden) -->
+    <div id="components">
+      <h3>Components</h3>
+      <label>Equippable Slot: 
+        <select id="component_slot">
+          <option value="HEAD">HEAD</option>
+          <option value="CHEST">CHEST</option>
+          <option value="LEGS">LEGS</option>
+          <option value="FEET">FEET</option>
+          <option value="HAND">HAND</option>
+        </select>
+      </label><br>
+    </div>
+    
     <button type="button" onclick="generateItem()">Generate Item</button>
   </form>
 
@@ -38,6 +51,15 @@
   <textarea id="output" readonly></textarea>
 
   <script>
+    function toggleComponents() {
+      const componentsDiv = document.getElementById('components');
+      if (componentsDiv.style.display === "none") {
+        componentsDiv.style.display = "block";
+      } else {
+        componentsDiv.style.display = "none";
+      }
+    }
+
     function generateItem() {
       const file_name = document.getElementById('file_name').value;
       const itemname = document.getElementById('itemname').value;
@@ -45,20 +67,35 @@
       const namespace = document.getElementById('namespace').value;
       const model = document.getElementById('model').value;
       const custom_model_data = document.getElementById('custom_model_data').value;
-      const slot = document.getElementById('slot').value;
 
-      const item = `${file_name}:
+      // Basic validation
+      if (!file_name || !itemname || !namespace || !model) {
+        alert('Please fill in all the required fields.');
+        return;
+      }
+
+      // Start the output string
+      let item = `${file_name}:
   itemname: ${itemname}
   material: ${material}
   Pack:
     model: ${namespace}/${file_name}
-    custom_model_data: ${custom_model_data} 
+    custom_model_data: ${custom_model_data}`;
+
+      // Check if the components section is visible, and if so, add it to the output
+      const componentsDiv = document.getElementById('components');
+      if (componentsDiv.style.display === "block") {
+        const component_slot = document.getElementById('component_slot').value;
+        item += `
   Components:
     equippable:
-      slot: ${slot}`;
+      slot: ${component_slot}`;
+      }
 
+      // Set the generated item to the output textarea
       document.getElementById('output').value = item;
     }
   </script>
 </body>
 </html>
+
