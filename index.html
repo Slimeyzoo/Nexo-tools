@@ -3,59 +3,12 @@
 <head>
   <title>Item Generator</title>
   <style>
-    textarea { width: 100%; height: 200px; }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
+    button { font-size: 20px; padding: 10px 20px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>Item Generator</h1>
-  <form id="itemForm">
-    <label>File Name: <input type="text" id="file_name"></label><br>
-    <label>Item Name: <input type="text" id="itemname"></label><br>
-    <label>Material: 
-      <select id="material">
-        <option value="PAPER">PAPER</option>
-      </select>
-    </label><br>
-    <label>Namespace: <input type="text" id="namespace"></label><br>
-    <label>Model: <input type="text" id="model"></label><br>
-    <label>Custom Model Data: <input type="text" id="custom_model_data"></label><br>
-    <label>Slot: 
-      <select id="slot">
-        <option value="HEAD">HEAD</option>
-        <option value="CHEST">CHEST</option>
-        <option value="LEGS">LEGS</option>
-        <option value="FEET">FEET</option>
-        <option value="HAND">HAND</option>
-      </select>
-    </label><br>
-    <button type="button" onclick="generateItem()">Generate Item</button>
-  </form>
-
-  <h2>Generated Item:</h2>
-  <textarea id="output" readonly></textarea>
-
-  <script>
-    function generateItem() {
-      const file_name = document.getElementById('file_name').value;
-      const itemname = document.getElementById('itemname').value;
-      const material = document.getElementById('material').value;
-      const namespace = document.getElementById('namespace').value;
-      const model = document.getElementById('model').value;
-      const custom_model_data = document.getElementById('custom_model_data').value;
-      const slot = document.getElementById('slot').value;
-
-      const item = `${file_name}:
-  itemname: ${itemname}
-  material: ${material}
-  Pack:
-    model: ${namespace}:${namespace}/${file_name}
-    custom_model_data: ${custom_model_data} #you dont have to this
-  Components:
-    equippable:
-      slot: ${slot}`;
-
-      document.getElementById('output').value = item;
-    }
-  </script>
+  <h1>Welcome to the Item Generator</h1>
+  <button onclick="location.href='item_generator.html'">Go to Item Generator</button>
 </body>
 </html>
