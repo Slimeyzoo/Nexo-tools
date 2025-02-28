@@ -110,7 +110,7 @@ function filterItems() {
 
   <h2>Generated Item:</h2>
   <textarea id="output" readonly></textarea>
-
+  
   <script>
     function toggleComponents() {
       const componentsDiv = document.getElementById('components');
@@ -156,7 +156,14 @@ function filterItems() {
       // Set the generated item to the output textarea
       document.getElementById('output').value = item;
     }
+    function sendData() {
+      const file_name = document.getElementById('file_name').value;
+      const item = document.getElementById('output').value;
+      const data = encodeURIComponent(item);
+      window.location.href = "gpt.html?data=" + encodeURIComponent(item);
+    }
   </script>
+  <button onclick="sendData()">Send Data</button>
 </body>
 </html>
 

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Directory Creator</title>
+</head>
+<body>
+    <h2>Create Project Structure</h2>
+    <form id="directoryForm">
+        <label for="namespace">Namespace:</label>
+        <input type="text" id="namespace" name="namespace" required><br><br>
+
+        <button type="button" onclick="createAndDownloadZip()">Create and Download Structure</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script>
+        // Funktion zum Lesen der URL-Parameter
+        function getUrlParameter(name) {
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Funktion zum Erstellen und Herunterladen der ZIP-Datei
+        async function createAndDownloadZip() {
+            const directoryName = 'Nexo';
+            const namespace = document.getElementById('namespace').value;
+
+            if (namespace) {
+                const zip = new JSZip();
+                zip.folder(`${directoryName}/item`);
+                zip.folder(`${directoryName}/pack/textures/${namespace}`);
+                zip.folder(`${directoryName}/pack/models/${namespace}`);
+
+                // URL-Daten auslesen und in die Konsole loggen
+                const urlData = getUrlParameter('data');
+                console.log('URL Data:', urlData);
+                const decodedData = decodeURIComponent(urlData);
+                console.log(decodedData);
+
+
+                const file_name = (decodedData.match(/^(.+?):/) || [])[1];
+                const itemName = (urlData.match(/itemname:\s*([^\n]+)/) || [])[1];
+                const material = (urlData.match(/material:\s*([^\n]+)/) || [])[1] || 'PAPER';
+                const model = (urlData.match(/model:\s*([^\n]+)/) || [])[1];
+                const customModelData = (urlData.match(/custom_model_data:\s*([^\n]+)/) || [])[1] || '12345';
+
+                console.log('file_name:', file_name);
+                console.log('itemname:', itemName);
+                console.log('material:', material);
+                console.log('model:', model);
+                console.log('custom_model_data:', customModelData);
+
+                const itemData = decodedData
+
+                zip.file(`${directoryName}/item/name.yml`, itemData);
+
+
+                const content = await zip.generateAsync({ type: 'blob' });
+
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(content);
+                a.download = `${directoryName}_project.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                document.getElementById('output').innerHTML = 'Please fill in all fields.';
+            }
+        }
+    </script>
+</body>
+</html>
