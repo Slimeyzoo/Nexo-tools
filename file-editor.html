@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZIP File Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+</head>
+<body>
+    <h1>ZIP File Editor</h1>
+    <input type="file" id="fileInput" onchange="loadZipFile(event)"><br>
+    <button onclick="navigateHome()">🏠 Home</button>
+    <button onclick="navigateUp()">⬆️ Verzeichnis hoch</button>
+    <div id="directoryStructure"></div>
+    <div id="editMenu" style="display:none; position:relative;">
+        <textarea id="fileContent" rows="20" cols="100" style="display:none;"></textarea><br>
+        <img id="uploadedImage" style="display:none; max-width:100%;"><br>
+        <button id="saveFileButton" onclick="saveCurrentFile()" style="display:none;">Save File</button>
+        <button id="closeEditButton" onclick="closeEditMenu()" style="position:absolute; top:10px; right:10px; display:none;">✖</button>
+    </div>    
+    <button id="downloadZipButton" onclick="downloadZip()" style="display:none;">Download ZIP</button>
+    
+    <h2>Verzeichnis und Dateien erstellen</h2>
+    <input type="text" id="newDir" placeholder="Neuer Ordner"><button onclick="createNewDirectory()">Erstellen</button><br>
+    <input type="text" id="newFile" placeholder="Neue Datei"><button onclick="createNewFile()">Erstellen</button>
+
+    <h2>Foto hochladen</h2>
+    <input type="file" id="imageInput" onchange="loadImage(event)">
+    <img id="uploadedImage" style="display:none; max-width:100%;">
+
+    <script src="zip-editor.js"></script>         
+</body>
+</html>
+
