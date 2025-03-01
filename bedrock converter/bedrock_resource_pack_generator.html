@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedrock Resource Pack Zip Generator</title>
+    <button onclick="location.href='../index.html'">Go to Home</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <h1>Bedrock Resource Pack Zip Generator</h1>
+
+    <label>Pack Name: <input type="text" id="packName" placeholder="My Resource Pack"></label><br>
+    <label>Pack Description: <input type="text" id="packDescription" placeholder="A cool resource pack"></label><br>
+    <label>Pack Version (e.g., 1.0.0): <input type="text" id="packVersion" placeholder="1.0.0"></label><br>
+    <label>Pack UUID: <input type="text" id="packUUID" placeholder="Generate a UUID"></label><br>
+    <label>Module UUID: <input type="text" id="moduleUUID" placeholder="Generate a UUID"></label><br>
+    <label>Pack Icon: <input type="file" id="packIcon" accept="image/png"></label><br>
+
+    <h2>Custom Folders & Files</h2>
+    <div id="folderContainer"></div>
+    <button type="button" onclick="addFolderInput()">Add Folder</button><br>
+
+    <button type="button" onclick="generatePackZip()">Generate and Download Pack</button>
+
+    <script>
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function addFolderInput() {
+            const container = document.getElementById('folderContainer');
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <label>Folder Name: <input type="text" class="folderName" placeholder="textures"></label>
+                <label>Files (Optional): <input type="file" class="folderFiles" multiple></label>
+                <button type="button" onclick="this.parentElement.remove()">Remove</button><br>
+            `;
+            container.appendChild(div);
+        }
+
+        function readAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        async function generatePackZip() {
+            const packName = document.getElementById('packName').value;
+            const packDescription = document.getElementById('packDescription').value;
+            const packVersion = document.getElementById('packVersion').value.split('.').map(Number);
+            const packUUID = document.getElementById('packUUID').value || generateUUID();
+            const moduleUUID = document.getElementById('moduleUUID').value || generateUUID();
+            const packIconFile = document.getElementById('packIcon').files[0];
+
+            if (!packName || !packDescription || !packVersion || packVersion.length !== 3) {
+                alert('Please fill in all required fields correctly!');
+                return;
+            }
+
+            const manifest = {
+                format_version: 2,
+                header: {
+                    name: packName,
+                    description: packDescription,
+                    uuid: packUUID,
+                    version: packVersion,
+                    min_engine_version: [1, 16, 0]
+                },
+                modules: [
+                    {
+                        type: "resources",
+                        uuid: moduleUUID,
+                        version: packVersion
+                    }
+                ]
+            };
+
+            const zip = new JSZip();
+            const packFolder = zip.folder(packName);
+            packFolder.file("manifest.json", JSON.stringify(manifest, null, 4));
+
+            if (packIconFile) {
+                const iconData = await readAsArrayBuffer(packIconFile);
+                packFolder.file("pack_icon.png", iconData);
+            }
+
+            const folderNames = document.getElementsByClassName('folderName');
+            const folderFiles = document.getElementsByClassName('folderFiles');
+
+            for (let i = 0; i < folderNames.length; i++) {
+                const folderName = folderNames[i].value;
+                const files = folderFiles[i].files;
+
+                if (!folderName || files.length === 0) continue;
+
+                const folder = packFolder.folder(folderName);
+
+                for (let file of files) {
+                    const fileData = await readAsArrayBuffer(file);
+                    folder.file(file.name, fileData);
+                }
+            }
+
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(content);
+                a.download = `${packName}.mcpack`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        }
+    </script>
+</body>
+</html>

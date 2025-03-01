@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Generator</title>
+    <button onclick="location.href='index.html'">Go to Home</button>
+</head>
+<body>
+    <h1>Item Generator</h1>
+    <label>Material: 
+        <input type="text" id="itemSearch" placeholder="Search for an item..." onkeyup="filterItems()">
+        <select id="material">
+            <option value="PAPER">PAPER</option>
+            <option value="WOODEN_SWORD">WOODEN_SWORD</option>
+            <option value="STONE_SWORD">STONE_SWORD</option>
+            <option value="IRON_SWORD">IRON_SWORD</option>
+            <option value="GOLDEN_SWORD">GOLDEN_SWORD</option>
+            <option value="DIAMOND_SWORD">DIAMOND_SWORD</option>
+            <option value="NETHERITE_SWORD">NETHERITE_SWORD</option>
+        </select>
+    </label><br>
+    <label>Sprite: <input type="text" id="sprit"></label><br>
+    <label>Custom Model Data: <input type="text" id="custom_model_data"></label><br>
+    <button type="button" onclick="generateItem()">Generate Item</button>
+    <h2>Generated Item:</h2>
+    <textarea id="output" style="width:90%; height:100px;"></textarea>
+
+    <script>
+        function filterItems() {
+            const input = document.getElementById('itemSearch').value.toUpperCase();
+            const select = document.getElementById('material');
+            const options = select.getElementsByTagName('option');
+
+            for (let i = 0; i < options.length; i++) {
+                const txtValue = options[i].textContent || options[i].innerText;
+                options[i].style.display = txtValue.toUpperCase().includes(input) ? '' : 'none';
+            }
+        }
+
+        function generateItem() {
+            const material = document.getElementById('material').value;
+            const sprit = document.getElementById('sprit').value;
+            const custom_model_data = document.getElementById('custom_model_data').value;
+
+            if (!material || !sprit || !custom_model_data) {
+                alert('Please fill in all the required fields.');
+                return;
+            }
+
+            const item = `{
+    "${material}": [
+        {
+            "custom_model_data": ${custom_model_data},
+            "sprit": "${sprit}"
+        }
+    ]
+}`;
+            console.log(item);
+            document.getElementById('output').value = item;
+        }
+    </script>
+</body>
+</html>

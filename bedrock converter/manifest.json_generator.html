@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Bedrock manifest.json Generator</title>
+</head>
+<body>
+    <h1>Bedrock Resource Pack Generator</h1>
+
+    <label>Pack Name: <input type="text" id="packName" placeholder="My Resource Pack"></label><br>
+    <label>Pack Description: <input type="text" id="packDescription" placeholder="A cool resource pack"></label><br>
+    <label>Pack Version (e.g., 1.0.0): <input type="text" id="packVersion" placeholder="1.0.0"></label><br>
+    <label>Pack UUID: <input type="text" id="packUUID" placeholder="Generate a UUID"></label><br>
+    <label>Module UUID: <input type="text" id="moduleUUID" placeholder="Generate a UUID"></label><br>
+
+    <button type="button" onclick="generatePack()">Generate Resource Pack</button>
+
+    <h2>Generated manifest.json:</h2>
+    <textarea id="output" style="width:90%; height:200px;"></textarea>
+
+    <script>
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function generatePack() {
+            const packName = document.getElementById('packName').value;
+            const packDescription = document.getElementById('packDescription').value;
+            const packVersion = document.getElementById('packVersion').value.split('.').map(Number);
+            const packUUID = document.getElementById('packUUID').value || generateUUID();
+            const moduleUUID = document.getElementById('moduleUUID').value || generateUUID();
+
+            if (!packName || !packDescription || !packVersion || packVersion.length !== 3) {
+                alert('Please fill in all required fields correctly!');
+                return;
+            }
+
+            const manifest = {
+                format_version: 2,
+                header: {
+                    name: packName,
+                    description: packDescription,
+                    uuid: packUUID,
+                    version: packVersion,
+                    min_engine_version: [1, 16, 0]
+                },
+                modules: [
+                    {
+                        type: "resources",
+                        uuid: moduleUUID,
+                        version: packVersion
+                    }
+                ]
+            };
+
+            document.getElementById('output').value = JSON.stringify(manifest, null, 4);
+        }
+    </script>
+</body>
+</html>

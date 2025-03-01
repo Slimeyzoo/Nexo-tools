@@ -109,7 +109,7 @@ function filterItems() {
   </form>
 
   <h2>Generated Item:</h2>
-  <textarea id="output" readonly></textarea>
+  <textarea id="output" max-width:90%; ></textarea>
 
   <script>
     function toggleComponents() {
@@ -159,11 +159,10 @@ function filterItems() {
     function sendData() {
       const file_name = document.getElementById('file_name').value;
       const item = document.getElementById('output').value;
-      const data = encodeURIComponent(item);
       window.location.href = "gpt.html?data=" + encodeURIComponent(item);
     }
   </script>
-  <button onclick="sendData()">Send Data</button>
+  <button onclick="sendData()">Create Nexo Pack</button>
 </body>
 </html>
 
