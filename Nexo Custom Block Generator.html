@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nexo Custom Block Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .container { max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 10px; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 20px; padding: 10px 15px; }
+    pre { background: #f4f4f4; padding: 10px; }
+    .tabs { display: flex; }
+    .tab { padding: 10px; cursor: pointer; background: #ddd; margin-right: 5px; }
+    .tab.active { background: #bbb; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Nexo Custom Block Generator</h2>
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('general')">General</div>
+      <div class="tab" onclick="openTab('mechanics')">Mechanics</div>
+      <div class="tab" onclick="openTab('sounds')">Sounds</div>
+      <div class="tab" onclick="openTab('populators')">Populators</div>
+    </div>
+
+    <div id="general" class="tab-content active">
+      <label>Block Name: <input type="text" id="blockName"></label>
+      <label>Material:
+        <select id="material">
+          <option value="PAPER">PAPER</option>
+          <option value="STONE">STONE</option>
+          <option value="DIRT">DIRT</option>
+          <option value="WOOD">WOOD</option>
+          <option value="IRON_BLOCK">IRON_BLOCK</option>
+        </select>
+      </label>
+      <label>Model: <input type="text" id="model"></label>
+    </div>
+
+    <div id="mechanics" class="tab-content">
+      <label>Custom Variation: <input type="number" id="customVariation" min="1" max="1149"></label>
+      <label>Hardness: <input type="number" id="hardness" step="0.1"></label>
+      <label>Drop Item: <input type="text" id="dropItem"></label>
+      <label>Silk Touch Required: <select id="silkTouch"><option value="true">Yes</option><option value="false">No</option></select></label>
+      <label>Minimal Tool Type: <input type="text" id="minimalTool" placeholder="e.g. STONE"></label>
+    </div>
+
+    <div id="sounds" class="tab-content">
+      <label>Place Sound: <input type="text" id="placeSound"></label>
+      <label>Break Sound: <input type="text" id="breakSound"></label>
+      <label>Hit Sound: <input type="text" id="hitSound"></label>
+      <label>Step Sound: <input type="text" id="stepSound"></label>
+      <label>Fall Sound: <input type="text" id="fallSound"></label>
+    </div>
+
+    <div id="populators" class="tab-content">
+      <label>Populator Type: <input type="text" id="populatorType" placeholder="e.g. ORE_POPULATOR"></label>
+      <label>Frequency: <input type="number" id="frequency"></label>
+      <label>Min Height: <input type="number" id="minHeight"></label>
+      <label>Max Height: <input type="number" id="maxHeight"></label>
+    </div>
+
+    <button onclick="generateYAML()">Generate YAML</button>
+
+    <h3>Generated YAML:</h3>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    function openTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function generateYAML() {
+      const blockName = document.getElementById('blockName').value;
+      const material = document.getElementById('material').value;
+      const model = document.getElementById('model').value;
+      const customVariation = document.getElementById('customVariation').value;
+      const hardness = document.getElementById('hardness').value;
+      const dropItem = document.getElementById('dropItem').value;
+      const silkTouch = document.getElementById('silkTouch').value;
+      const minimalTool = document.getElementById('minimalTool').value;
+      const placeSound = document.getElementById('placeSound').value;
+      const breakSound = document.getElementById('breakSound').value;
+      const hitSound = document.getElementById('hitSound').value;
+      const stepSound = document.getElementById('stepSound').value;
+      const fallSound = document.getElementById('fallSound').value;
+      const populatorType = document.getElementById('populatorType').value;
+      const frequency = document.getElementById('frequency').value;
+      const minHeight = document.getElementById('minHeight').value;
+      const maxHeight = document.getElementById('maxHeight').value;
+
+      const yaml = `${blockName}:
+  itemname: "${blockName}"
+  material: ${material}
+  Pack:
+    parent_model: "block/cube_all"
+    textures:
+      - ${model}.png
+  Mechanics:
+    custom_block:
+      type: NOTEBLOCK
+      custom_variation: ${customVariation}
+      model: ${model}
+      hardness: ${hardness}
+      drop:
+        silktouch: ${silkTouch}
+        minimal_type: ${minimalTool}
+        loots:
+          - nexo_item: ${dropItem}
+            probability: 1.0
+      block_sounds:
+        place_sound: ${placeSound}
+        break_sound: ${breakSound}
+        hit_sound: ${hitSound}
+        step_sound: ${stepSound}
+        fall_sound: ${fallSound}
+  Populators:
+    type: ${populatorType}
+    frequency: ${frequency}
+    min_height: ${minHeight}
+    max_height: ${maxHeight}
+`;
+      document.getElementById('output').textContent = yaml;
+    }
+  </script>
+</body>
+</html>
